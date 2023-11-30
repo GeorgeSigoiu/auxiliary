@@ -1,0 +1,54 @@
+version: '3'
+
+networks:
+  menuorders-net:
+
+services:
+  stock-db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Boxu64481
+      MYSQL_DATABASE: stock
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - menuorders-net
+
+  stock-db-web:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: stock-db
+      PMA_USER: root
+      PMA_PASSWORD: Boxu64481
+      PMA_USER_CONFIG: /etc/phpmyadmin/config.user.inc.php
+    volumes:
+      - ./phpmyadmin-config/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+    ports:
+      - "8081:80"
+    depends_on:
+      - stock-db
+    networks:
+      - menuorders-net
+
+  backend:
+      image: docker.io/georgesigoiu/menu-orders:1.1.0
+      restart: always
+      ports:
+        - "7900:7900"
+      depends_on:
+        - stock-db
+      networks:
+        - menuorders-net
+
+  frontend:
+    image: docker.io/georgesigoiu/menu-orders-front:1.1.0
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - menuorders-net
