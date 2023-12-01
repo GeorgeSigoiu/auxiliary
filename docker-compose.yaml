@@ -16,6 +16,7 @@ services:
       - "3306:3306"
     networks:
       - menuorders-net
+    command: --bind-address=0.0.0.0
 
   stock-db-web:
     image: phpmyadmin/phpmyadmin
