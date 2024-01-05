@@ -1,0 +1,14 @@
+version: '3'
+
+networks:
+  menuorders-net:
+
+
+services:
+  frontend:
+    image: docker.io/georgesigoiu/menu-orders-front:1.1.0
+    restart: always
+    ports:
+      - "443:3000"
+    networks:
+      - menuorders-net
